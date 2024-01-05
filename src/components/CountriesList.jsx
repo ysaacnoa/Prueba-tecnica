@@ -1,7 +1,5 @@
 /* eslint-disable react/prop-types */
 
-
-
 import { useState } from 'react';
 import '../css/CountriesList.css';
 
@@ -25,16 +23,12 @@ export default function CountriesList({ countries, flagImages, cityImages, showC
     return name.toLowerCase().includes(search.toLowerCase());
   });
   
-  
   const filteredCountries = selectedContinents.length > 0
-    ? filteredBySearch.filter(country =>
-        country &&
-        country.continent &&
-        country.continent.name &&
-        typeof country.continent.name === 'string' &&
-        selectedContinents.includes(country.continent.name)
-      )
-    : filteredBySearch;
+  ? filteredBySearch.filter(country =>
+      country?.continent?.name && selectedContinents.includes(country.continent.name)
+    )
+  : filteredBySearch;
+  
 
 
   return (

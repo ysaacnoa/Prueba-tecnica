@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react'
 import {useLazyQuery} from '@apollo/client'
 import { DETAILS_COUNTRY} from '../graphql/getCountry-graphql';
 
-import { getFlagImages, getCityImages} from '../logic/countryImages';
-import { transformCountryName} from '../logic/transformName';
 
 import CountryDetails from './CountryDetails'
 import CountriesList from './CountriesList'
@@ -14,18 +12,21 @@ import Sidebar from './Sidebar'
 import Page2 from '../Router/Page2'
 import Page3 from '../Router/Page3'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useImages } from '../hooks/useImages';
 
-const API_KEY = '40427821-eecd864e644bf269f228f8a85'
+
+
 //endpoint a consumir
 //"https://pixabay.com/api/?key="+{API_KEY}+"&q="+{variable}+&image_type=photo
 
 export default function Countries({countries}) {
+  //controlar la llamada a detalles
   const [getCountry, result] = useLazyQuery(DETAILS_COUNTRY)
   const [selectedCountry, setSelectedCountry] = useState(null)
-  const [search, setSearch] = useState('')
-  const [flagImages, setFlagImages] = useState({})
-  const [cityImages, setCityImages] = useState({})
 
+  const [search, setSearch] = useState('')
+  const { flagImages, cityImages } = useImages({ countries });
+  
 
   const showCountry = (name) => {
     getCountry({variables: {name: name}})
@@ -34,16 +35,6 @@ export default function Countries({countries}) {
   const handleCloseModal = () => {
     setSelectedCountry(null); // Esta función cerrará el modal
   };
-
-
-  useEffect(() => {
-    getFlagImages(countries, setFlagImages, transformCountryName, API_KEY);
-  }, [countries]);
-  
-  useEffect(() => {
-    getCityImages(countries, setCityImages, transformCountryName, API_KEY);
-  }, [countries]); 
-  
 
   // guardamos en selectedCountry mediante su estado el resultado de la consulta, useEffect se ejecuta cuando cambia el estado de result
   useEffect(() => {
